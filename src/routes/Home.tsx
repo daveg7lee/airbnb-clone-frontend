@@ -5,13 +5,13 @@ import Room from "../components/Room/Room";
 import RoomSkeleton from "../components/Room/RoomSkeleton";
 
 interface IPhoto {
-  pk: string;
+  id: string;
   file: string;
   description: string;
 }
 
 interface IRoom {
-  pk: number;
+  id: number;
   name: string;
   country: string;
   city: string;
@@ -56,7 +56,8 @@ export default function Home() {
       )}
       {data?.map((room: IRoom) => (
         <Room
-          key={room.pk}
+          key={room.id}
+          id={room.id}
           imageUrl={room.photos[0].file}
           name={room.name}
           rating={room.rating}
