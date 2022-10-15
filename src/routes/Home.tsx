@@ -23,6 +23,7 @@ interface IRoom {
 
 export default function Home() {
   const { data, isLoading } = useQuery<IRoom[]>(["rooms"], getRooms);
+
   return (
     <Grid
       templateColumns={{
