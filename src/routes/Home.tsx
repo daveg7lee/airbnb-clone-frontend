@@ -3,26 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { getRooms } from "../api";
 import Room from "../components/Room/Room";
 import RoomSkeleton from "../components/Room/RoomSkeleton";
-
-interface IPhoto {
-  id: string;
-  file: string;
-  description: string;
-}
-
-interface IRoom {
-  id: number;
-  name: string;
-  country: string;
-  city: string;
-  price: number;
-  rating: number;
-  is_owner: boolean;
-  photos: IPhoto[];
-}
+import { IRoomList } from "../types";
 
 export default function Home() {
-  const { data, isLoading } = useQuery<IRoom[]>(["rooms"], getRooms);
+  const { data, isLoading } = useQuery<IRoomList[]>(["rooms"], getRooms);
 
   return (
     <Grid
@@ -54,7 +38,7 @@ export default function Home() {
           <RoomSkeleton />
         </>
       )}
-      {data?.map((room: IRoom) => (
+      {data?.map((room) => (
         <Room
           key={room.id}
           id={room.id}
