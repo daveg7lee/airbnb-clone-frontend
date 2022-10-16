@@ -1,19 +1,28 @@
 import {
+  Avatar,
   Box,
   Grid,
   GridItem,
   Heading,
+  HStack,
   Image,
   Skeleton,
+  SkeletonCircle,
+  Text,
+  VStack,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { FaStar } from "react-icons/fa";
 import { useParams } from "react-router-dom";
-import { getRoom } from "../api";
-import { IRoomDetail } from "../types";
+import { getRoom, getRoomReviews } from "../api";
+import { IReview, IRoomDetail } from "../types";
 
 export default function RoomDetail() {
   const { roomId } = useParams();
   const { isLoading, data } = useQuery<IRoomDetail>(["rooms", roomId], getRoom);
+  const { data: reviewsData, isLoading: isReviewsLoading } = useQuery<
+    IReview[]
+  >(["rooms", roomId, "reviews"], getRoomReviews);
 
   return (
     <Box px={{ base: 10, lg: 40 }} mt={10}>
@@ -47,6 +56,37 @@ export default function RoomDetail() {
           </GridItem>
         ))}
       </Grid>
+      <HStack justifyContent="space-between" mt={10} w="60%">
+        <VStack alignItems="flex-start">
+          <Skeleton height="30px" isLoaded={!isLoading}>
+            <Heading fontSize="2xl">House hosted by {data?.owner.name}</Heading>
+          </Skeleton>
+          <Skeleton isLoaded={!isLoading}>
+            <HStack justifyContent="flex-start" w="full">
+              <Text>
+                {data?.toilets} toilet{data?.toilets === 1 ? "" : "s"}
+              </Text>
+              <Text>•</Text>
+              <Text>
+                {data?.rooms} room{data?.rooms === 1 ? "" : "s"}
+              </Text>
+            </HStack>
+          </Skeleton>
+        </VStack>
+        <SkeletonCircle isLoaded={!isLoading} size={"59.5"}>
+          <Avatar name={data?.owner.name} size="lg" src={data?.owner.avatar} />
+        </SkeletonCircle>
+      </HStack>
+      <Box mt={10}>
+        <Heading fontSize="2xl">
+          <HStack>
+            <FaStar /> <Text>{data?.rating}</Text> <Text>•</Text>
+            <Text>
+              {reviewsData?.length} review{reviewsData?.length === 1 ? "" : "s"}
+            </Text>
+          </HStack>
+        </Heading>
+      </Box>
     </Box>
   );
 }
