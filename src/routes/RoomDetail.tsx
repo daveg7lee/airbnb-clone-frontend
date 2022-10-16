@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import { getRoom } from "../api";
 
 export default function RoomDetail() {
-  const { roomPk } = useParams();
-  const { isLoading, data } = useQuery([`room:${roomPk}`], getRoom);
-  console.log(data);
+  const { roomId } = useParams();
+  const { isLoading, data } = useQuery(["rooms", roomId], getRoom);
+
   return <h1>hello</h1>;
 }
