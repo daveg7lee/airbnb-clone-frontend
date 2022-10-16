@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Container,
   Grid,
   GridItem,
   Heading,
@@ -80,12 +79,15 @@ export default function RoomDetail() {
       </HStack>
       <Box mt={10}>
         <Heading mb={5} fontSize="2xl">
-          <HStack>
-            <FaStar /> <Text>{data?.rating}</Text> <Text>•</Text>
-            <Text>
-              {reviewsData?.length} review{reviewsData?.length === 1 ? "" : "s"}
-            </Text>
-          </HStack>
+          <Skeleton isLoaded={!isReviewsLoading} w={{ sm: "50%", md: "20%" }}>
+            <HStack>
+              <FaStar /> <Text>{data?.rating}</Text> <Text>•</Text>
+              <Text>
+                {reviewsData?.length} review
+                {reviewsData?.length === 1 ? "" : "s"}
+              </Text>
+            </HStack>
+          </Skeleton>
         </Heading>
         <Grid mt={16} gap={10} templateColumns={"1fr 1fr"}>
           {reviewsData?.map((review, index) => (
