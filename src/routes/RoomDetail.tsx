@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Container,
   Grid,
   GridItem,
   Heading,
@@ -25,7 +26,7 @@ export default function RoomDetail() {
   >(["rooms", roomId, "reviews"], getRoomReviews);
 
   return (
-    <Box px={{ base: 10, lg: 40 }} mt={10}>
+    <Box pb={10} px={{ base: 10, lg: 40 }} mt={10}>
       <Skeleton height="43px" width="50%" isLoaded={!isLoading}>
         <Heading>{data?.name}</Heading>
       </Skeleton>
@@ -78,7 +79,7 @@ export default function RoomDetail() {
         </SkeletonCircle>
       </HStack>
       <Box mt={10}>
-        <Heading fontSize="2xl">
+        <Heading mb={5} fontSize="2xl">
           <HStack>
             <FaStar /> <Text>{data?.rating}</Text> <Text>•</Text>
             <Text>
@@ -86,6 +87,27 @@ export default function RoomDetail() {
             </Text>
           </HStack>
         </Heading>
+        <Grid mt={16} gap={10} templateColumns={"1fr 1fr"}>
+          {reviewsData?.map((review, index) => (
+            <VStack alignItems="flex-start" key={index}>
+              <HStack>
+                <Avatar
+                  name={review.user.name}
+                  src={review.user.avatar}
+                  size="md"
+                />
+                <VStack spacing={0} alignItems="flex-start">
+                  <Heading fontSize={"md"}>{review.user.name}</Heading>
+                  <HStack spacing={1}>
+                    <FaStar size="12px" />
+                    <Text>{review.rating}</Text>
+                  </HStack>
+                </VStack>
+              </HStack>
+              <Text>{review.payload}</Text>
+            </VStack>
+          ))}
+        </Grid>
       </Box>
     </Box>
   );
