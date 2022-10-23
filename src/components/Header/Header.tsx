@@ -16,6 +16,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { FaAirbnb, FaMoon, FaSun } from "react-icons/fa";
 import { logOut } from "../../api";
 import useUser from "../../lib/useUser";
@@ -24,6 +25,7 @@ import SignUpModal from "./SignUpModal";
 
 export default function Header() {
   const toast = useToast();
+  const queryClient = useQueryClient();
   const { userLoading, user, isLoggedIn } = useUser();
 
   const {
@@ -50,16 +52,17 @@ export default function Header() {
       status: "loading",
       position: "bottom-right",
     });
-    /* const data = await logOut();
-    console.log(data); */
-    setTimeout(() => {
-      toast.update(toastId, {
-        status: "success",
-        title: "Done!",
-        description: "See you later!",
-        duration: 500,
-      });
-    }, 5000);
+
+    await logOut();
+
+    queryClient.refetchQueries(["me"]);
+
+    toast.update(toastId, {
+      status: "success",
+      title: "Done!",
+      description: "See you later!",
+      duration: 1000,
+    });
   };
 
   return (
