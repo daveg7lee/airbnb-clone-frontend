@@ -5,18 +5,25 @@ import {
   HStack,
   IconButton,
   LightMode,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   SkeletonCircle,
   Stack,
   useColorMode,
   useColorModeValue,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { FaAirbnb, FaMoon, FaSun } from "react-icons/fa";
+import { logOut } from "../../api";
 import useUser from "../../lib/useUser";
 import LoginModal from "./LoginModal";
 import SignUpModal from "./SignUpModal";
 
 export default function Header() {
+  const toast = useToast();
   const { userLoading, user, isLoggedIn } = useUser();
 
   const {
@@ -35,6 +42,25 @@ export default function Header() {
 
   const logoColor = useColorModeValue("red.500", "red.200");
   const Icon = useColorModeValue(FaMoon, FaSun);
+
+  const onLogOut = async () => {
+    const toastId = toast({
+      title: "Login out...",
+      description: "Sad to see you go...",
+      status: "loading",
+      position: "bottom-right",
+    });
+    /* const data = await logOut();
+    console.log(data); */
+    setTimeout(() => {
+      toast.update(toastId, {
+        status: "success",
+        title: "Done!",
+        description: "See you later!",
+        duration: 500,
+      });
+    }, 5000);
+  };
 
   return (
     <Stack
@@ -67,7 +93,14 @@ export default function Header() {
               </LightMode>
             </>
           ) : (
-            <Avatar size={"sm"} name={user?.name} src={user?.avatar} />
+            <Menu>
+              <MenuButton>
+                <Avatar size={"sm"} name={user?.name} src={user?.avatar} />
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={onLogOut}>Log Out</MenuItem>
+              </MenuList>
+            </Menu>
           )
         ) : (
           <SkeletonCircle size="8" />
