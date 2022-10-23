@@ -67,10 +67,10 @@ export default function Header() {
               </LightMode>
             </>
           ) : (
-            <Avatar size={"md"} />
+            <Avatar size={"sm"} name={user?.name} src={user?.avatar} />
           )
         ) : (
-          <SkeletonCircle size="10" />
+          <SkeletonCircle size="8" />
         )}
       </HStack>
       <LoginModal onClose={onLoginClose} isOpen={isLoginOpen} />
