@@ -14,20 +14,18 @@ export default function KakaoConfirm() {
     const code = new URLSearchParams(search).get("code");
 
     if (code) {
-      console.log(code);
-      return;
-      //   const status = await kakaoLogIn(code);
-      //   if (status === 200) {
-      //     toast({
-      //       status: "success",
-      //       title: "Welcome!",
-      //       description: "Happy to have you back!",
-      //     });
+      const status = await kakaoLogIn(code);
+      if (status === 200) {
+        toast({
+          status: "success",
+          title: "Welcome!",
+          description: "Happy to have you back!",
+        });
 
-      //     queryClient.refetchQueries(["me"]);
+        queryClient.refetchQueries(["me"]);
 
-      //     navigate("/");
-      //   }
+        navigate("/");
+      }
     }
   };
 

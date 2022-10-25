@@ -75,7 +75,7 @@ export default function Header() {
       alignItems="center"
       spacing={{ sm: 4, md: 0 }}
     >
-      <Box color={logoColor}>
+      <Box color={logoColor} as="a" href="/">
         <FaAirbnb size={48} />
       </Box>
       <HStack spacing={2}>
