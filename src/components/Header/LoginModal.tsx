@@ -10,9 +10,10 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Text,
   VStack,
 } from "@chakra-ui/react";
-import { SyntheticEvent, useState } from "react";
+import { useForm } from "react-hook-form";
 import { FaLock, FaUserAlt } from "react-icons/fa";
 import SocialLogin from "./SocialLogin";
 
@@ -21,23 +22,19 @@ interface LoginModalProps {
   onClose: () => void;
 }
 
+interface IForm {
+  username: string;
+  password: string;
+}
+
 export default function LoginModal({ onClose, isOpen }: LoginModalProps) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IForm>();
 
-  const onChange = (event: SyntheticEvent<HTMLInputElement>) => {
-    const { name, value } = event.currentTarget;
-
-    if (name === "username") {
-      setUsername(value);
-    } else if (name === "password") {
-      setPassword(value);
-    }
-  };
-
-  const onSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
-    event.preventDefault();
-  };
+  const onSubmit = ({ username, password }: IForm) => {};
 
   return (
     <Modal onClose={onClose} isOpen={isOpen}>
@@ -45,7 +42,7 @@ export default function LoginModal({ onClose, isOpen }: LoginModalProps) {
       <ModalContent>
         <ModalHeader>Log in</ModalHeader>
         <ModalCloseButton />
-        <ModalBody as="form" onSubmit={onSubmit as any}>
+        <ModalBody as="form" onSubmit={handleSubmit(onSubmit)}>
           <VStack>
             <InputGroup>
               <InputLeftElement
@@ -56,12 +53,12 @@ export default function LoginModal({ onClose, isOpen }: LoginModalProps) {
                 }
               />
               <Input
-                required
-                name="username"
-                onChange={onChange}
-                value={username}
+                isInvalid={Boolean(errors.username?.message)}
                 placeholder="username"
                 variant="filled"
+                {...register("username", {
+                  required: "Please write a username",
+                })}
               />
             </InputGroup>
             <InputGroup>
@@ -73,13 +70,13 @@ export default function LoginModal({ onClose, isOpen }: LoginModalProps) {
                 }
               />
               <Input
-                required
-                name="password"
-                onChange={onChange}
-                value={password}
+                isInvalid={Boolean(errors.password?.message)}
                 placeholder="password"
                 variant="filled"
                 type="password"
+                {...register("password", {
+                  required: "Please write a password",
+                })}
               />
             </InputGroup>
           </VStack>
