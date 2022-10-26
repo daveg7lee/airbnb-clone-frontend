@@ -46,7 +46,7 @@ export default function RoomDetail() {
             key={index}
           >
             <Skeleton isLoaded={!isLoading} h="full" w="full">
-              {data?.photos && data.photos.length > 0 ? (
+              {data?.photos && data.photos.length > 4 ? (
                 <Image
                   w="full"
                   h="full"
