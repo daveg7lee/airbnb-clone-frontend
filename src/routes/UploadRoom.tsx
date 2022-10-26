@@ -20,6 +20,7 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { FaBed, FaDollarSign, FaToilet } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import {
   getAmenities,
   getCategories,
@@ -28,10 +29,11 @@ import {
 } from "../api";
 import HostOnlyPage from "../components/ProtectedPages/HostOnlyPage";
 import ProtectedPage from "../components/ProtectedPages/ProtectedPage";
-import { IAmenity, ICategory } from "../types";
+import { IAmenity, ICategory, IRoomDetail } from "../types";
 
 export default function UploadRoom() {
   const toast = useToast();
+  const navigate = useNavigate();
   const { register, handleSubmit } = useForm<IUploadRoomVariables>();
   const { data: amenities } = useQuery<IAmenity[]>(["amenities"], getAmenities);
   const { data: categories } = useQuery<ICategory[]>(
@@ -39,12 +41,13 @@ export default function UploadRoom() {
     getCategories
   );
   const mutation = useMutation(uploadRoom, {
-    onSuccess: () => {
+    onSuccess: (data: IRoomDetail) => {
       toast({
         status: "success",
         title: "Room created",
         position: "bottom-right",
       });
+      navigate(`/rooms/${data.id}`);
     },
   });
 
