@@ -2,6 +2,7 @@ import "react-calendar/dist/Calendar.css";
 import {
   Avatar,
   Box,
+  Button,
   Grid,
   GridItem,
   Heading,
@@ -16,27 +17,23 @@ import Calendar from "react-calendar";
 import { useQuery } from "@tanstack/react-query";
 import { FaStar } from "react-icons/fa";
 import { useParams } from "react-router-dom";
-import { getRoom, getRoomReviews } from "../api";
+import { checkBooking, getRoom, getRoomReviews } from "../api";
 import { IReview, IRoomDetail } from "../types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function RoomDetail() {
   const { roomId } = useParams();
+  const [dates, setDates] = useState<Date[]>();
   const { isLoading, data } = useQuery<IRoomDetail>(["rooms", roomId], getRoom);
   const { data: reviewsData } = useQuery<IReview[]>(
     ["rooms", roomId, "reviews"],
     getRoomReviews
   );
-  const [dates, setDates] = useState<Date[]>();
-
-  useEffect(() => {
-    if (dates) {
-      const [firstDate, secondDate] = dates;
-      const [checkIn] = firstDate.toJSON().split("T");
-      const [checkOut] = secondDate.toJSON().split("T");
-      console.log(checkIn, checkOut);
-    }
-  }, [dates]);
+  const { data: checkBookingData, isLoading: isCheckingBooking } = useQuery(
+    ["check", roomId, dates],
+    checkBooking,
+    { enabled: dates !== undefined, cacheTime: 0 }
+  );
 
   return (
     <Box pb={10} px={{ base: 10, lg: 40 }} mt={10}>
@@ -144,6 +141,18 @@ export default function RoomDetail() {
             maxDate={new Date(Date.now() + 60 * 60 * 24 * 7 * 4 * 6 * 1000)}
             minDetail="month"
           />
+          <Button
+            disabled={!checkBookingData?.ok}
+            mt={5}
+            w="full"
+            colorScheme="red"
+            isLoading={isCheckingBooking}
+          >
+            Make Booking
+          </Button>
+          {!isCheckingBooking && !checkBookingData?.ok ? (
+            <Text color="red.500">Can't book on those dates, sorry.</Text>
+          ) : null}
         </Box>
       </Grid>
     </Box>
