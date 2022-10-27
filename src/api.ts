@@ -156,3 +156,22 @@ export const uploadImage = ({ file, uploadURL }: IUploadImageVariables) => {
     })
     .then((response) => response.data);
 };
+
+export interface ICreatePhotoVariables {
+  roomId: string;
+  file: string;
+  description: string;
+}
+
+export const createPhoto = ({
+  roomId,
+  description,
+  file,
+}: ICreatePhotoVariables) =>
+  instance
+    .post(
+      `rooms/${roomId}/photos`,
+      { description, file },
+      { headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" } }
+    )
+    .then((response) => response.data);
