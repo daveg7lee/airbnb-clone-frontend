@@ -10,7 +10,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
-import { getUploadURL } from "../api";
+import { getUploadURL, uploadImage } from "../api";
 import HostOnlyPage from "../components/ProtectedPages/HostOnlyPage";
 import ProtectedPage from "../components/ProtectedPages/ProtectedPage";
 
@@ -18,17 +18,30 @@ interface IForm {
   file: FileList;
 }
 
+interface IUploadURLResponse {
+  id: string;
+  uploadURL: string;
+}
+
 export default function UploadPhotos() {
-  const { register, handleSubmit } = useForm<IForm>();
+  const { register, handleSubmit, watch } = useForm<IForm>();
   const { roomPk } = useParams();
-  const mutation = useMutation(getUploadURL, {
+  const uploadImageMutation = useMutation(uploadImage, {
     onSuccess: (data) => {
       console.log(data);
     },
   });
+  const uploadURLMutataion = useMutation(getUploadURL, {
+    onSuccess: (data) => {
+      uploadImageMutation.mutate({
+        uploadURL: data.uploadURL,
+        file: watch("file"),
+      });
+    },
+  });
 
   const onSubmit = (data: IForm) => {
-    mutation.mutate();
+    uploadURLMutataion.mutate();
   };
 
   return (
