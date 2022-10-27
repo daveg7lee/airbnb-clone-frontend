@@ -18,7 +18,7 @@ import { FaStar } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { getRoom, getRoomReviews } from "../api";
 import { IReview, IRoomDetail } from "../types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function RoomDetail() {
   const { roomId } = useParams();
@@ -27,7 +27,16 @@ export default function RoomDetail() {
     ["rooms", roomId, "reviews"],
     getRoomReviews
   );
-  const [dates, setDates] = useState<Date>();
+  const [dates, setDates] = useState<Date[]>();
+
+  useEffect(() => {
+    if (dates) {
+      const [firstDate, secondDate] = dates;
+      const [checkIn] = firstDate.toJSON().split("T");
+      const [checkOut] = secondDate.toJSON().split("T");
+      console.log(checkIn, checkOut);
+    }
+  }, [dates]);
 
   return (
     <Box pb={10} px={{ base: 10, lg: 40 }} mt={10}>
